@@ -1,5 +1,5 @@
-#include <example.hpp>
+#include <boosts/filesystem.hpp>
 
 int main() {
-  example();
+  boosts::system::path path_to_ftp;
 }
