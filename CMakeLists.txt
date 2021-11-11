@@ -49,8 +49,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 
-include_directories(${Boost_INCLUDE_DIRS})
-#target_link_libraries(${PROJECT_NAME} LINK_PUBLIC ${Boost_LIBRARIES})
+#include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC system filesystem)
 target_link_libraries(demo ${PROJECT_NAME})
 
 
