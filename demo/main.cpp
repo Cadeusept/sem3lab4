@@ -1,3 +1,6 @@
+#include <string>
+#include <iostream>
+
 #include <boosts/filesystem.hpp>
 
 int main() {
