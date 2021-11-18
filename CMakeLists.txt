@@ -27,10 +27,10 @@ string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 
 find_package(GTest CONFIG REQUIRED)
 hunter_add_package(Boost COMPONENTS system filesystem)
-find_package(Boost COMPONENTS system filesystem)
+find_package(Boost CONFIG REQUIRED filesystem)
 
 add_library(${PROJECT_NAME} STATIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/example.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/sources/boost_filesystem.cpp
 )
 
 add_executable(demo
@@ -43,14 +43,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 
-#include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PUBLIC system filesystem)
+
 target_link_libraries(demo ${PROJECT_NAME})
 
 
 if(BUILD_TESTS)
   add_executable(tests
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/example.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/tests/example.cpp
   )
   target_link_libraries(tests ${PROJECT_NAME} GTest::gtest_main)
   enable_testing()
