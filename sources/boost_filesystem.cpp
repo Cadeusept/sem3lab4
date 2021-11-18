@@ -1,8 +1,14 @@
 // Copyright 2021 Your Name <your_email>
 
 #include <boost_filesystem.hpp>
-#include <stdexcept>
 
-auto example() -> void {
-  throw std::runtime_error("not implemented");
+std::vector<std::string> parse_filename(std::string filename){
+  std::vector<std::string> parsed;
+  std::stringstream strs(filename);
+  std::string word;
+  while(std::getline(strs, word, '_'))
+  {
+    parsed.push_back(word);
+  }
+  return parsed;
 }
