@@ -8,8 +8,22 @@
 #include <vector>
 #include <sstream>
 
-auto example() -> void;
+#include <boost/filesystem.hpp>
+
+struct AccountInfo
+{
+  size_t kol;
+  size_t lastdate;
+  std::string dirname;
+  size_t account;
+};
+
+void parse_dir(boost::filesystem::path path_to_dir);
 
 std::vector<std::string> parse_filename(std::string filename);
+
+void print_dir(boost::filesystem::path path_to_dir);
+
+void print_broker_info(std::vector<AccountInfo> account_info);
 
 #endif // INCLUDE_EXAMPLE_HPP_

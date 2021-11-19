@@ -43,6 +43,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 "$<INSTALL_INTERFACE:include>"
 )
 
+add_definitions("-DFTP_DIR=\"${CMAKE_SOURCE_DIR}/misc/ftp/\"")
+
 target_link_libraries(demo ${PROJECT_NAME})
 
 if(BUILD_TESTS)
