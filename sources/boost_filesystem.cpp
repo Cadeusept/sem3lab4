@@ -40,7 +40,7 @@ void parse_dir(const boost::filesystem::path& path_to_dir,
         size_t account = std::stoi(parsed[1]);
         size_t filedate = std::stoi(parsed[2]);
 
-        std::int16_t flag = -1;
+        int16_t flag = -1;
         for (unsigned long i = 0; i < account_info.size(); ++i) {
           if (dirname == account_info[i].dirname &&
               account == account_info[i].account) {

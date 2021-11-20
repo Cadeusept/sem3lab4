@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <cstdint>
 
 #include <boost/filesystem.hpp>
 
