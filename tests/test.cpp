@@ -56,16 +56,16 @@ TEST(Equality, parse_dir) {
     print_dir_info(testpath,ss);
     parse_dir(testpath,ss);
     EXPECT_EQ(ss.str(),
-              "bcs balance_00122223_20181003.txt\n"
-              "bcs balance_00123456_20180902.txt\n"
+              "bcs balance_00122223_20180901.txt\n"
+              "bcs balance_00123456_20181002.txt\n"
               "bcs balance_00122223_20181001.txt\n"
               "bcs balance_00123456_20181003.txt\n"
-              "bcs balance_00123456_20180903.txt\n"
-              "bcs balance_00123456_20181002.txt\n"
+              "bcs balance_00123456_20180901.txt\n"
               "bcs balance_00122223_20181002.txt\n"
               "bcs balance_00123456_20181001.txt\n"
-              "bcs balance_00123456_20180901.txt\n"
-              "bcs balance_00122223_20180901.txt\n"
+              "bcs balance_00123456_20180903.txt\n"
+              "bcs balance_00122223_20181003.txt\n"
+              "bcs balance_00123456_20180902.txt\n"
               "broker:bcs account:122223 files:4 lastdate:20181003\n"
               "broker:bcs account:123456 files:6 lastdate:20181003\n");
 }

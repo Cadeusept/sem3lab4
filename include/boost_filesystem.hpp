@@ -18,12 +18,15 @@ struct AccountInfo
   size_t account;
 };
 
-void parse_dir(boost::filesystem::path path_to_dir, std::ostream& outpt);
+void parse_dir(const boost::filesystem::path& path_to_dir,
+               std::ostream& outpt);
 
 std::vector<std::string> parse_filename(std::string filename);
 
-void print_dir_info(boost::filesystem::path path_to_dir, std::ostream& outpt);
+void print_dir_info(const boost::filesystem::path& path_to_dir,
+                    std::ostream& outpt);
 
-void print_broker_info(std::vector<AccountInfo> account_info, std::ostream& outpt);
+void print_broker_info(const std::vector<AccountInfo>& account_info,
+                       std::ostream& outpt);
 
-#endif // INCLUDE_EXAMPLE_HPP_
+#endif  // INCLUDE_BOOST_FILESYSTEM_HPP_
