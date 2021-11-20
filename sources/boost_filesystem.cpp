@@ -17,7 +17,7 @@ std::vector<std::string> parse_filename(std::string filename){
   return parsed;
 }
 
-void parse_dir(const boost::filesystem::path path_to_dir) {
+void parse_dir(const boost::filesystem::path path_to_dir, std::ostream& outpt) {
   std::vector<AccountInfo> account_info;
   std::string dirname = path_to_dir.stem().string();
 
@@ -25,7 +25,7 @@ void parse_dir(const boost::filesystem::path path_to_dir) {
        boost::filesystem::directory_iterator{path_to_dir}) {
 
     if (boost::filesystem::is_directory(x.path())) {
-      parse_dir(x.path());
+      parse_dir(x.path(), outpt);
     }
 
     if (boost::filesystem::is_regular_file(x.path())) {
@@ -33,8 +33,8 @@ void parse_dir(const boost::filesystem::path path_to_dir) {
       parsed = parse_filename(x.path().stem().string());
       if (parsed.size()==3 && parsed[0]=="balance" &&
           parsed[1].length()==8 && parsed[2].length()==8 &&
-          std::stoi(parsed[2].substr(5,2))<=12 &&
-          std::stoi(parsed[2].substr(7,2))<=31 &&
+          std::stoi(parsed[2].substr(4,2))<=12 &&
+          std::stoi(parsed[2].substr(6,2))<=31 &&
           x.path().extension().string() == ".txt")
       {
 
@@ -51,50 +51,54 @@ void parse_dir(const boost::filesystem::path path_to_dir) {
         if (flag == -1) {
           AccountInfo new_struct;
           new_struct.account=account;
-          new_struct.kol=0;
-          new_struct.lastdate=0;
+          new_struct.kol=1;
+          new_struct.lastdate=filedate;
           new_struct.dirname=dirname;
           account_info.push_back(new_struct);
           flag = account_info.size() - 1;
+        }else{
+          account_info[flag].kol++;
+          account_info[flag].lastdate=
+              std::max(account_info[flag].lastdate, filedate);
         }
 
-        account_info[flag].kol++;
-        account_info[flag].lastdate=std::max(account_info[flag].lastdate,filedate);
+
       }
 
     }
 
   }
   if (account_info.size()!=0) {
-    print_broker_info(account_info);
+    print_broker_info(account_info, outpt);
   }
 }
 
-void print_dir(boost::filesystem::path path_to_dir) {
+void print_dir_info(boost::filesystem::path path_to_dir, std::ostream& outpt) {
   for (const boost::filesystem::directory_entry& x :
     boost::filesystem::directory_iterator{path_to_dir}) {
     if (boost::filesystem::is_directory(x.path())) {
-      print_dir(x.path());
+      print_dir_info(x.path(), outpt);
     }
     if (boost::filesystem::is_regular_file(x.path())) {
       std::vector<std::string> parsed;
       parsed = parse_filename(x.path().stem().string());
       if (parsed.size() == 3 && parsed[0] == "balance" &&
           parsed[1].length() == 8 && parsed[2].length() == 8 &&
-          std::stoi(parsed[2].substr(5, 2)) <= 12 &&
-          std::stoi(parsed[2].substr(7, 2)) <= 31 &&
+          std::stoi(parsed[2].substr(4, 2)) <= 12 &&
+          std::stoi(parsed[2].substr(6, 2)) <= 31 &&
           x.path().extension().string() == ".txt") {
 
-        std::cout << path_to_dir.stem().string() << " "
+        outpt << path_to_dir.stem().string() << " "
                   << x.path().filename().string() << std::endl;
       }
     }
   }
 }
 
-void print_broker_info(std::vector<AccountInfo> account_info) {
+void print_broker_info(std::vector<AccountInfo> account_info,
+                       std::ostream& outpt) {
   for (unsigned long i=0; i<account_info.size(); ++i){
-    std::cout << "broker:" << account_info[i].dirname
+    outpt << "broker:" << account_info[i].dirname
               << " account:" << account_info[i].account
               << " files:" << account_info[i].kol
               << " lastdate:" << account_info[i].lastdate

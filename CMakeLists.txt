@@ -44,6 +44,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 add_definitions("-DFTP_DIR=\"${CMAKE_SOURCE_DIR}/misc/ftp/\"")
+add_definitions("-DTEST_DIRS=\"${CMAKE_SOURCE_DIR}/tests/test_dirs/\"")
 
 target_link_libraries(demo ${PROJECT_NAME})
 
