@@ -7,17 +7,18 @@ std::vector<std::string> parse_filename(std::string filename){
   filename += "_";
   for (int i = 0; i < 3; ++i) {
     parsed.push_back(filename.substr(0, filename.find('_')));
-    filename=filename.substr(filename.find('_') + 1);
+    filename = filename.substr(filename.find('_') + 1);
   }
   if (parsed[2].find('.') != std::string::npos) {
-    parsed.push_back(parsed[2].substr(parsed[2].find('.')+1));
+    parsed.push_back(parsed[2].substr(parsed[2].find('.') + 1));
     parsed[2] = parsed[2].substr(0, parsed[2].find('.'));
   }
 
   return parsed;
 }
 
-void parse_dir(const boost::filesystem::path& path_to_dir, std::ostream& outpt) {
+void parse_dir(const boost::filesystem::path& path_to_dir,
+               std::ostream& outpt) {
   std::vector<AccountInfo> account_info;
   std::string dirname = path_to_dir.stem().string();
 
@@ -39,9 +40,10 @@ void parse_dir(const boost::filesystem::path& path_to_dir, std::ostream& outpt) 
         size_t account = std::stoi(parsed[1]);
         size_t filedate = std::stoi(parsed[2]);
 
-        int flag = -1;
+        int16_t flag = -1;
         for (unsigned long i = 0; i < account_info.size(); ++i) {
-          if (dirname == account_info[i].dirname && account == account_info[i].account) {
+          if (dirname == account_info[i].dirname &&
+              account == account_info[i].account) {
             flag = i;
           }
         }
@@ -67,7 +69,8 @@ void parse_dir(const boost::filesystem::path& path_to_dir, std::ostream& outpt) 
   }
 }
 
-void print_dir_info(const boost::filesystem::path& path_to_dir, std::ostream& outpt) {
+void print_dir_info(const boost::filesystem::path& path_to_dir,
+                    std::ostream& outpt) {
   for (const boost::filesystem::directory_entry& x :
     boost::filesystem::directory_iterator{path_to_dir}) {
     if (boost::filesystem::is_directory(x.path())) {
@@ -81,7 +84,6 @@ void print_dir_info(const boost::filesystem::path& path_to_dir, std::ostream& ou
           std::stoi(parsed[2].substr(4, 2)) <= 12 &&
           std::stoi(parsed[2].substr(6, 2)) <= 31 &&
           x.path().extension().string() == ".txt") {
-
         outpt << path_to_dir.stem().string() << " "
                   << x.path().filename().string() << std::endl;
       }

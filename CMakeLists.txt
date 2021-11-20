@@ -59,6 +59,15 @@ endif()
 
 file(COPY misc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+if(BUILD_COVERAGE)
+set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage build." FORCE)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tools/coverage/cmake")
+find_package(codecov)
+#string(APPEND CMAKE_CXX_FLAGS " —coverage")
+add_coverage(${PROJECT_NAME})
+add_coverage(tests)
+coverage_evaluate()
+endif()
 
 if(BUILD_DOCS)
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_docs)
