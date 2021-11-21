@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.17)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,77 +20,78 @@ HunterGate(
   SHA1 "95c47c92f68edb091b5d6d18924baabe02a6962a"
 )
 
-# TODO: rename project and delete this comment
-project(template VERSION 0.1.0)
+project(lab_04_boost_filesystem)
 string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -Wno-unused-command-line-argument")
 string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 
-# new versions of cmake contain gtest search files
-# commented out to increase the build speed.
-# hunter_add_package(GTest)
+hunter_add_package(Boost COMPONENTS filesystem)
+hunter_add_package(GTest)
+find_package(Boost CONFIG REQUIRED filesystem)
 find_package(GTest CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
-  # enum your files and delete this comment
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/example.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/sources/boost_filesystem.cpp
 )
 
 add_executable(demo
-  ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-  "$<INSTALL_INTERFACE:include>"
+"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+"$<INSTALL_INTERFACE:include>"
 )
+
+add_definitions("-DFTP_DIR=\"${CMAKE_SOURCE_DIR}/misc/ftp/\"")
+add_definitions("-DTEST_DIRS=\"${CMAKE_SOURCE_DIR}/tests/test_dirs/\"")
 
 target_link_libraries(demo ${PROJECT_NAME})
 
 if(BUILD_TESTS)
-  add_executable(tests
-    # TODO: enum your files and delete this comment
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/example.cpp
-  )
-  target_link_libraries(tests ${PROJECT_NAME} GTest::gtest_main)
-  enable_testing()
-  add_test(NAME unit_tests COMMAND tests)
+add_executable(tests
+${CMAKE_CURRENT_SOURCE_DIR}/tests/test.cpp
+)
+target_link_libraries(tests ${PROJECT_NAME} GTest::gtest_main)
+enable_testing()
+add_test(NAME unit_tests COMMAND tests)
 endif()
 
+file(COPY misc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 if(BUILD_COVERAGE)
-  set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage build." FORCE)
-  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tools/coverage/cmake")
-  find_package(codecov)
-  string(APPEND CMAKE_CXX_FLAGS " --coverage")
-  add_coverage(${PROJECT_NAME})
-  add_coverage(tests)
-  coverage_evaluate()
+set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage build." FORCE)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tools/coverage/cmake")
+find_package(codecov)
+string(APPEND CMAKE_CXX_FLAGS " --coverage")
+add_coverage(${PROJECT_NAME})
+add_coverage(tests)
+coverage_evaluate()
 endif()
 
 if(BUILD_DOCS)
-  set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_docs)
-  set(DOXYGEN_EXAMPLE_PATH examples)
-  set(DOXYGEN_GENERATE_HTML NO)
-  set(DOXYGEN_GENERATE_MAN YES)
-  find_package(Doxygen)
-  doxygen_add_docs(docs include)
-  install(DIRECTORY ${DOXYGEN_OUTPUT_DIRECTORY}/man DESTINATION share)
-  # add_dependencies(install docs) need to call target docs before install or package
+set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_docs)
+set(DOXYGEN_EXAMPLE_PATH examples)
+set(DOXYGEN_GENERATE_HTML NO)
+set(DOXYGEN_GENERATE_MAN YES)
+find_package(Doxygen)
+doxygen_add_docs(docs include)
+install(DIRECTORY ${DOXYGEN_OUTPUT_DIRECTORY}/man DESTINATION share)
 endif()
 
 include(CPackConfig.cmake)
 
 install(TARGETS ${PROJECT_NAME} demo
-  EXPORT "${PROJECT_NAME}-targets"
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  INCLUDES DESTINATION include
+EXPORT "${PROJECT_NAME}-targets"
+RUNTIME DESTINATION bin
+ARCHIVE DESTINATION lib
+LIBRARY DESTINATION lib
+INCLUDES DESTINATION include
 )
-
+target_link_libraries(${PROJECT_NAME} Boost::filesystem)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
 
 install(EXPORT "${PROJECT_NAME}-targets"
-  NAMESPACE "${PROJECT_NAME}::"
-  DESTINATION "lib/cmake"
+NAMESPACE "${PROJECT_NAME}::"
+DESTINATION "lib/cmake"
 )
